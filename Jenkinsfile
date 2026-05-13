@@ -10,7 +10,7 @@ pipeline {
 
         stage('Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/abhisheksajjan73-create/swamisir.git'
+                git branch: 'main', url: 'https://github.com/abhisheksajjan73-create/newproject.git'
             }
         }
 
