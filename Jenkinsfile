@@ -1,11 +1,9 @@
 pipeline {
     agent any
-
     environment {
         AWS_REGION = 'ap-south-1'
-        ECR_REPO = '966537025366.dkr.ecr.ap-south-1.amazonaws.com/my-app'
+        ECR_REPO = '569278272697.dkr.ecr.ap-south-1.amazonaws.com/my-app'
     }
-
     stages {
 
         stage('Clone') {
@@ -22,20 +20,29 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t  javaking:latest .'
+                sh 'docker build -t hello-java .'
             }
         }
 
         stage('Push to ECR') {
             steps {
                 sh '''
-                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 966537025366.dkr.ecr.ap-south-1.amazonaws.com
+                aws ecr get-login-password --region $AWS_REGION | \
+                docker login --username AWS --password-stdin \
+                569278272697.dkr.ecr.ap-south-1.amazonaws.com
 
                 docker tag hello-java:latest $ECR_REPO:latest
-
                 docker push $ECR_REPO:latest
                 '''
             }
+        }
+    }
+    post {
+        success {
+            echo '✅ Image successfully pushed to ECR!'
+        }
+        failure {
+            echo '❌ Pipeline failed! Check logs above!'
         }
     }
 }
